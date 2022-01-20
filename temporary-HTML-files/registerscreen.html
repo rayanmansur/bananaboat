@@ -1,0 +1,34 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<body>
+    <form>
+        username:&nbsp;&nbsp;<input type="text" id="username"><br>
+        password:&nbsp;&nbsp;<input type="text" id="password"><br>
+        <input type="submit" value="Register">
+    </form>
+</body>
+
+</html> -->
+
+{% block content %}
+
+{% if givenUserName %}
+    <h1>Hello {{givenUserName}}</h1>
+{% else %}
+    <h1>Register</h1>
+    <br>
+    <form method="post">
+        {{ givenForm.hidden_tag() }}
+        {{ givenForm.username.label }}
+        {{ givenForm.username() }}
+        <br>
+        {{ givenForm.password.label }}
+        {{ givenForm.password() }}
+        <br>
+        {{ givenForm.register() }}
+
+    </form>
+{% endif %}
+
+{% endblock %}
