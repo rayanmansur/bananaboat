@@ -2,11 +2,27 @@ from flask import Flask, render_template
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired
-
-
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
+
+# Add Database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# Secret Key!
 app.config['SECRET_KEY'] = ""
+#Initialize the database
+db = SQLAlchemy(app)
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(200), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Create a string
+    def __repr__(self):
+        return '<Username %r' %self.username
 
 
 #Create a Form Class
