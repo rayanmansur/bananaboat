@@ -1,19 +1,7 @@
-<!-- <!DOCTYPE html>
-<html>
-
-<body>
-    <form>
-        username:&nbsp;&nbsp;<input type="text" id="username"><br>
-        password:&nbsp;&nbsp;<input type="text" id="password"><br>
-        <input type="submit" value="Register">
-    </form>
-</body>
-
-</html> -->
+{% extends 'layout.html' %}
 
 
-
-{% block content %}
+{% block body %}
 
 {% if email %}
     <h1>Hello {{email}}</h1>
