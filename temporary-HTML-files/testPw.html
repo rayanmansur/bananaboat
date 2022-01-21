@@ -15,21 +15,25 @@
 
 {% block content %}
 
-{% if username %}
-    <h1>Hello {{username}}</h1>
+{% if email %}
+    <h1>Hello {{email}}</h1>
+    <h1>Password: {{ password }}</h1>
+    <br>
+    <h2>Found:</h2>
+    Name: {{passwordToCheck.username}} <br>
+    Email: {{passwordToCheck.email}} <br>
+    Password: {{passwordToCheck.password}}
 {% else %}
-    <a href="../register"><h1>Register</h1></a>
+    <!-- <a href="../register"><h1>Register</h1></a> -->
+    <h1>What's your email and password?</h1>
     <br>
     <form method="POST">
         {{ form.hidden_tag() }}
-        {{ form.username.label }}
-        {{ form.username() }}
+        {{ form.email.label }}
+        {{ form.email() }}
         <br>
         {{ form.password.label }}
         {{ form.password() }}
-        <br>
-        {{ form.email.label }}
-        {{ form.email() }}
         <br>
         {{ form.register() }}
 
