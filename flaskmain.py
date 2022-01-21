@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request
+from flask import Flask, render_template, flash, request, redirect
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, EmailField
 from wtforms.validators import DataRequired
@@ -71,7 +71,7 @@ def delete(id):
     password = None
     email = None
     form = registerForm()
-
+    
 
     try:
         db.session.delete(usernameToDelete)
@@ -79,8 +79,9 @@ def delete(id):
 
         
         our_users = Users.query.order_by(Users.date_added)
-        return render_template("registerscreen.html",
-        username=username, password=password, email=email, form=form, our_users=our_users)
+        return redirect("../register", code=302) 
+        #render_template("registerscreen.html",
+        #username=username, password=password, email=email, form=form, our_users=our_users)
     except:
         print("GOSH TOOTIN DARN DJFKLAJDSJFAJLKF")
         
