@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+{% if username %}
+    <h1>Hello {{username}}</h1>
+{% else %}
+    <a href="../register"><h1>Register</h1></a>
+    <br>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.username.label }}
+        {{ form.username() }}
+        <br>
+        {{ form.password.label }}
+        {{ form.password() }}
+        <br>
+        {{ form.email.label }}
+        {{ form.email() }}
+        <br>
+        {{ form.register() }}
+
+    </form>
+    <br><br><br>
+
+{% for our_user in our_users %}
+    {{our_user.id}}.{{our_user.username}} - {{our_user.email}} - {{ our_user.password }} - <a href="{{url_for('delete', id=our_user.id)}}">Delete</a>
+    <br>
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+
+{% if email %}
+    <h1>Hello {{email}}</h1>
+    <h1>Password: {{ password }}</h1>
+    <br>
+    <h2>Found:</h2>
+    Name: {{passwordToCheck.username}} <br>
+    Email: {{passwordToCheck.email}} <br>
+    Password: {{passwordToCheck.password}}
+{% else %}
+    <!-- <a href="../register"><h1>Register</h1></a> -->
+    <h1>What's your email and password?</h1>
+    <br>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.email.label }}
+        {{ form.email() }}
+        <br>
+        {{ form.password.label }}
+        {{ form.password() }}
+        <br>
+        {{ form.register() }}
+
+    </form>
+    <br><br><br>
+
+{% for our_user in our_users %}
+    {{our_user.id}}.{{our_user.username}} - {{our_user.email}} - {{ our_user.password }} - <a href="{{url_for('delete', id=our_user.id)}}">Delete</a>
+    <br>
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}
