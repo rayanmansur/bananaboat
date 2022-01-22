@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+  {% block body %}
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100&display=swap");
+      .center {
+        font-family: "Lexend Deca"; 
+      }
+    </style>
+    <div class="center">
+      <h1>Login</h1>
+      <form method="post">
+        <label>Username</label>
+        <div class="txt_field">
+          <input type="text" required />
+          <!--<label>Username</label> -->
+        </div>
+        <label>Password</label>
+        <div class="txt_field">
+          <input type="password" required />
+          <!--  <label>Password</label> -->
+        </div>
+        <div class="pass"></div>
+        <center><input type="submit" value="Login" /></center>
+        <br />
+        <br />
+        <div class="signup_link">
+          Do you wish to Register? &nbsp; &nbsp;
+          <a href="#">Signup</a>
+        </div>
+      </form>
+    </div>
+{% endblock %}
