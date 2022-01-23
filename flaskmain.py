@@ -16,10 +16,14 @@ app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 
 # New MYSQL db
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/our_users'
 
 # Secret Key!
 app.config['SECRET_KEY'] = "penis"
+
+socketio = SocketIO(app)
+socketio.run(app, debug=True)
 #Initialize the database
 db = SQLAlchemy(app)
 
@@ -30,7 +34,6 @@ logInManager.login_view = 'login'
 @logInManager.user_loader
 def loadUser(userId):
     return Users.query.get(int(userId))
-
 
 
 class Users(db.Model, UserMixin):
@@ -81,27 +84,27 @@ class logInForm(FlaskForm):
 def index():
     return render_template("index.html")
 
-# Update Database Record
-@app.route('/delete/<int:id>')
-def delete(id):
-    usernameToDelete = Users.query.get_or_404(id)
-    username = None
-    password = None
-    email = None
-    form = registerForm()
+# # Update Database Record
+# @app.route('/delete/<int:id>')
+# def delete(id):
+#     usernameToDelete = Users.query.get_or_404(id)
+#     username = None
+#     password = None
+#     email = None
+#     form = registerForm()
     
 
-    try:
-        db.session.delete(usernameToDelete)
-        db.session.commit()
+#     try:
+#         db.session.delete(usernameToDelete)
+#         db.session.commit()
 
         
-        our_users = Users.query.order_by(Users.date_added)
-        return redirect("../register", code=302) 
-        #render_template("registerscreen.html",
-        #username=username, password=password, email=email, form=form, our_users=our_users)
-    except:
-        print("GOSH TOOTIN DARN DJFKLAJDSJFAJLKF")
+#         our_users = Users.query.order_by(Users.date_added)
+#         return redirect("../register", code=302) 
+#         #render_template("registerscreen.html",
+#         #username=username, password=password, email=email, form=form, our_users=our_users)
+#     except:
+#         print("GOSH TOOTIN DARN DJFKLAJDSJFAJLKF")
         
 @app.route('/testPw', methods=['GET', 'POST'])
 def testPw():
@@ -231,43 +234,32 @@ def logout():
 def search():
     return render_template('search.html')
 
+@app.route('/videochat')
+def videochat():
+    return render_template('videochat.html')
 
-socketio = SocketIO(app)
-SocketIO(app,cors_allowed_origins="*")
+@app.route('/csgo')
+def csgo():
+    return render_template('csgo.html')
 
-#text chat ini
-@app.route('/chatenter')
-def chatenter():
-    return render_template("chatenter.html")
+@app.route('/valorant')
+def valorant():
+    return render_template('valorant.html')
 
-@app.route('/chat', methods=['GET', 'POST'])
-def chat():
-    username = request.args.get('username')
-    room = request.args.get('room')
+@app.route('/csgolobby/<id>')
+def csgolobby(id):
+    return render_template('csgolobby.html', id=id)
 
-    if username and room:
-        return render_template('chat.html', username=username, room=room)
-    else:
-        return redirect(url_for('chatenter'))
+# def messageReceived(methods=['GET', 'POST']):
+#     print('message was received!!!')
 
-@socketio.on('send_message')
-def handle_send_message_event(data, methods=['GET', 'POST']):
-    app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
-                                                                    data['room'],
-                                                                    data['message']))
-    socketio.emit('receive_message', data, room=data['room'])
-
-@socketio.on('join_room')
-def handle_join_room_event(data):
-    app.logger.info("{} has joined the room {}".format(data['username'], data['room']))
-    join_room(data['room'])
-    socketio.emit('join_room_announcement', data, room=data['room'])
+# @socketio.on('my event')
+# def handle_my_custom_event(json, methods=['GET', 'POST']):
+#     print('received my event: ' + str(json))
+#     socketio.emit('my response', json, callback=messageReceived)
 
 
-@socketio.on('leave_room')
-def handle_leave_room_event(data):
-    app.logger.info("{} has left the room {}".format(data['username'], data['room']))
-    leave_room(data['room'])
-    socketio.emit('leave_room_announcement', data, room=data['room'])
 
-socketio.run(app, debug=True)
+@app.route('/valorantlobby/<id>')
+def valorantlobby(id):
+    return render_template('valorantlobby.html', id=id)
