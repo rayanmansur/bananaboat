@@ -1,6 +1,15 @@
 {% extends 'layout.html' %}
 
 
-{ % block body %}
-<h1>Hello {{ userId }}</h1>
+{% block body %}
+
+<h1>Hey {{current_user.username}}, what's poppin'?</h1>
+<br><br>
+<h2><a href="../search">Look for a group</a></h2>
+<br>
+<br>
+<br>
+
+
+<a href="{{ url_for('logout') }}">Logout</a>
 {% endblock %}

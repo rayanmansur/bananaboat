@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+>
+{% block body %}
+<link rel="stylesheet" type='text/css' media='screen' href="{{url_for('static', filename = 'websitecode/videochat.css')}}">
+{% if (id|int == 1) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IABGYUai5Q8vfRNOM8PxIDqNBtz24YJl+Tb7TXgxVPm9GAVfGZ8AAAAAEABLPQ3JiKjuYQEAAQCEqO5h" channel="csgo1">
+{% elif (id|int == 2) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IADR0Bnry8jjauSVLCl6p+D4TWsei3Gs83H2kF9woSKqq78OEAYAAAAAEABLPQ3J96ruYQEAAQD0qu5h" channel="csgo2">
+{% elif (id|int == 3) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IABZknyzNERBhRMJBRsZDfufftty+YK8uF7xR48IQANyTCk+F3EAAAAAEABLPQ3J/azuYQEAAQD6rO5h" channel="csgo3">
+{% elif (id|int == 4) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IADRN9OnQq86D6GnL7XkrOcMGyPh5aSSHodmcFcehuHo7Yqrc+8AAAAAEABLPQ3JFa3uYQEAAQASre5h" channel="csgo4">
+{% elif (id|int == 5) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IAAl7UFjBKHDEyAVKc7oR7xnigDJgiaHjMWTPPwZV04u5BybdJgAAAAAEABLPQ3JMa3uYQEAAQAure5h" channel="csgo5">
+{% endif %}
+    
+
+    <br>
+    <br>
+    <button id="join-btn">Join Stream</button>
+    <div id="stream-wrapper">
+        <div id="video-streams"></div>
+
+        <div id="stream-controls">
+            <button id="leave-btn">Leave Stream</button>
+            <button id="mic-btn">Mic On</button>
+            <button id="camera-btn">Camera On</button>
+        </div>
+
+
+    </div>
+
+<script src="{{url_for('static', filename = 'websitecode/AgoraRTC_N-4.8.1.js')}}"></script>
+<script src="{{url_for('static', filename = 'websitecode/videochat.js')}}"></script>
+
+{% endblock %}

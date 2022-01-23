@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+>
+{% block body %}
+<link rel="stylesheet" type='text/css' media='screen' href="{{url_for('static', filename = 'websitecode/videochat.css')}}">
+{% if (id|int == 1) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IAAHTJMZ5WAV/XgERelCUtU4tdsUMU/OARfTPenFGGdVueHsCZQAAAAAEABLPQ3J363uYQEAAQDcre5h" channel="valorant1">
+{% elif (id|int == 2) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IABBR4SgQOnC/VxIXHaDmAW8dinH0uUmdyymxVFbRxiU71u9AA0AAAAAEABLPQ3JC67uYQEAAQAIru5h" channel="valorant2">
+{% elif (id|int == 3) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IADqODsnrXZZlnA8a5ie9QjTpYAQZ1kr/PSmmDw1U6PWac2NB3oAAAAAEABLPQ3JHa7uYQEAAQAaru5h" channel="valorant3">
+{% elif (id|int == 4) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IAAHJfbfyGhSu2DyiLob1ygDhRAXgP93Oizo1aLBN6Fa2G4YY+QAAAAAEABLPQ3JNa7uYQEAAQAyru5h" channel="valorant4">
+{% elif (id|int == 5) %}
+    <meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IADHwpaAZ+5rd4Pyzb41BceeorcoK715UWSgpCVjd4wcFfgoZJMAAAAAEABLPQ3JSa7uYQEAAQBGru5h" channel="valorant5">
+{% endif %}
+    
+
+    <br>
+    <br>
+    <button id="join-btn">Join Stream</button>
+    <div id="stream-wrapper">
+        <div id="video-streams"></div>
+
+        <div id="stream-controls">
+            <button id="leave-btn">Leave Stream</button>
+            <button id="mic-btn">Mic On</button>
+            <button id="camera-btn">Camera On</button>
+        </div>
+
+
+    </div>
+
+<script src="{{url_for('static', filename = 'websitecode/AgoraRTC_N-4.8.1.js')}}"></script>
+<script src="{{url_for('static', filename = 'websitecode/videochat.js')}}"></script>
+
+{% endblock %}

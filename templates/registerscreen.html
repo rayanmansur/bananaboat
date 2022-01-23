@@ -1,32 +1,39 @@
 {% extends 'layout.html' %}
 
+
+
 {% block body %}
 
+{% for message in get_flashed_messages() %}
+    {{ message }}
+{% endfor %}
+<br>
+<br>
 {% if username %}
-    <h1>Hello {{username}}</h1>
+    <h1>Registration successful!</h1>
+    <h2>Login <a href="../login">here</a></h2>
 {% else %}
-    <a href="../register"><h1>Register</h1></a>
+    <h1>Register</h1>
     <br>
     <form method="POST">
         {{ form.hidden_tag() }}
-        {{ form.username.label }}
+        {{ form.username.label }}&nbsp;&nbsp;&nbsp;&nbsp;
         {{ form.username() }}
         <br>
-        {{ form.password.label }}
+        <br>
+        {{ form.password.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         {{ form.password() }}
         <br>
-        {{ form.email.label }}
+        <br>
+        {{ form.email.label }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         {{ form.email() }}
+        <br>
         <br>
         {{ form.register() }}
 
     </form>
     <br><br><br>
 
-{% for our_user in our_users %}
-    {{our_user.id}}.{{our_user.username}} - {{our_user.email}} - {{ our_user.password }} - <a href="{{url_for('delete', id=our_user.id)}}">Delete</a>
-    <br>
-{% endfor %}
 
 {% endif %}
 

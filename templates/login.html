@@ -2,12 +2,30 @@
 
 {% block body %}
 
+
+
 {% for message in get_flashed_messages() %}
     {{ message }}
 {% endfor %}
+<br>
+<br>
+<h1>Login</h1>
 
-<a href=""> <h1>Login</h1> </a>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.email.label }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    {{ form.email() }}
+    <br>
+    <br>
+    {{ form.password.label }}&nbsp;&nbsp;&nbsp;&nbsp;
+    {{ form.password() }}
+    <br>
 
+    <br>
+    {{ form.login() }}
+
+</form>
+<br><br><br>
 
 
 

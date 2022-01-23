@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+>
+{% block body %}
+<link rel="stylesheet" type='text/css' media='screen' href="{{url_for('static', filename = 'websitecode/videochat.css')}}">
+<meta id="optimus-prime" chatId="0066cb6c490e0564f27bd49cf37950962f7IAAhsFgduN+M/p5VRO7+RxFwbISEO3jJ3PfEuvNJaQb3zmTNKL8AAAAAEABLPQ3JTn7uYQEAAQBLfu5h" channel="main">
+    <br>
+    <br>
+    <button id="join-btn">Join Stream</button>
+    <div id="stream-wrapper">
+        <div id="video-streams"></div>
+
+        <div id="stream-controls">
+            <button id="leave-btn">Leave Stream</button>
+            <button id="mic-btn">Mic On</button>
+            <button id="camera-btn">Camera On</button>
+        </div>
+
+
+    </div>
+
+<script src="{{url_for('static', filename = 'websitecode/AgoraRTC_N-4.8.1.js')}}"></script>
+<script src="{{url_for('static', filename = 'websitecode/videochat.js')}}"></script>
+
+{% endblock %}

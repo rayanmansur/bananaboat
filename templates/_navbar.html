@@ -1,15 +1,24 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light " style="background-color: #ebb400;">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">BananaBoat</a>
+      <a class="navbar-brand" href="../"><strong>BananaBoat</strong></a>
       <div id="navbarContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <ul class="navbar-nav navbar-right">
+            {% if current_user.is_authenticated %}
             <li class="nav-item navbar-nav">
-              <a class="nav-link active" aria-current="page" href="#">Login</a>
+              <a class="nav-link" href="{{url_for('search')}}"><strong>Search for Lobbies</strong></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Register</a>
+              <a class="nav-link" href="{{url_for('logout')}}"><strong>Logout</strong></a>
             </li>
+            {% else %}
+              <li class="nav-item navbar-nav">
+                <a class="nav-link" href="login"><strong>Login</strong></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="register"><strong>Register</strong></a>
+              </li>
+            {% endif %}
           </div>
         </ul>
 
