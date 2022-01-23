@@ -1,4 +1,6 @@
-from flask import Flask, render_template, flash, request, redirect
+from flask_socketio import SocketIO
+from enum import unique
+from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, EmailField
 from wtforms.validators import DataRequired
@@ -21,7 +23,17 @@ app.config['SECRET_KEY'] = "penis"
 #Initialize the database
 db = SQLAlchemy(app)
 
-class Users(db.Model):
+logInManager = LoginManager()
+logInManager.init_app(app)
+logInManager.login_view = 'login'
+
+@logInManager.user_loader
+def loadUser(userId):
+    return Users.query.get(int(userId))
+
+
+
+class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(200), nullable=False)
     password = db.Column(db.String(200), nullable=False)
@@ -57,6 +69,12 @@ class registerForm(FlaskForm):
     email = EmailField("Enter Email", validators=[DataRequired()])
     password = PasswordField("Enter password", validators=[DataRequired()])
     register = SubmitField("Register")
+
+class logInForm(FlaskForm):
+    email = EmailField("Email", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    login = SubmitField("Login")
+
 
 @app.route('/')
 
@@ -118,49 +136,138 @@ def testPw():
 @app.route('/register', methods=['GET', 'POST'])
 # registration page
 def register():
-    print("11111111111111")
-    username = None
-    email = None
-    password = None
-    form = registerForm()
-    print("22222222222222")
-    # Validate Form
-    if form.validate_on_submit():
-        print("3333333333333333333")
-        user = Users.query.filter_by(email=form.email.data).first()
-        print("4444444444444444")
-        if user is None:
-            print("Fffffffffffffuck")
-            user = Users(username=form.username.data, email=form.email.data, password=form.password.data)
-            print("nice")
-            db.session.add(user)
-            db.session.commit()
-        
-        username = form.username.data
-        # password = form.password.data
-        email = form.email.data
-        form.username.data = ''
-        form.password.data = ''
-        form.email.data = ''
-        flash("User Added Successfully")
+    if current_user.is_authenticated == False:
+        print("11111111111111")
+        username = None
+        email = None
+        password = None
+        form = registerForm()
+        print("22222222222222")
+        # Validate Form
+        if form.validate_on_submit():
+            print("3333333333333333333")
+            user = Users.query.filter_by(email=form.email.data).first()
+            print("4444444444444444")
+            if user is None:
+                print("Fffffffffffffuck")
+                user = Users(username=form.username.data, email=form.email.data, password=form.password.data)
+                print("nice")
+                db.session.add(user)
+                db.session.commit()
+                username = form.username.data
+                # password = form.password.data
+                email = form.email.data
+                form.username.data = ''
+                form.password.data = ''
+                form.email.data = ''
+                our_users = Users.query.order_by(Users.date_added)
+                return render_template("registerscreen.html",
+                username=username, password=password, email=email,
+                form=form, our_users=our_users)
 
-    our_users = Users.query.order_by(Users.date_added)
-    return render_template("registerscreen.html",
-    username=username, password=password, email=email,
-    form=form, our_users=our_users)
+                flash("User Added Successfully")
+            else:
+                flash("This email already exists")
+                form.username.data = ''
+                form.password.data = ''
+                form.email.data = ''
+            
+            
+            
 
-@app.route('/user/<id>')
-# user settings page
-def user(id):
-    #gets id from url and saves it as userId to be used in user.html page
-    return render_template("user.html", userId=id)
+        our_users = Users.query.order_by(Users.date_added)
+        return render_template("registerscreen.html",
+        username=username, password=password, email=email,
+        form=form, our_users=our_users)
+    else:
+        return redirect(url_for('search'))
+
+# @app.route('/user/<id>')
+# # user settings page
+# def user(id):
+#     #gets id from url and saves it as userId to be used in user.html page
+#     return render_template("user.html", userId=id)
 
 @app.route('/web')
 def web():
     return render_template("web.html")
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated == False:
+        form = logInForm()
+        if form.validate_on_submit():
+            user = Users.query.filter_by(email=form.email.data).first()
+            if user:
+                # Check passwords
+                print(user.password, form.password.data)
+                if user.password == form.password.data:
+                    login_user(user)
+                    return redirect(url_for('user'))
+                else:
+                    flash("Wrong Password - Try Again!")
+            else:
+                flash("This Email Doesn't Exist")
 
-    flash("Login successful")
-    pass
+        return render_template('login.html', form=form)
+    else:
+        return redirect(url_for('search'))
+
+
+@app.route('/user', methods=['GET', 'POST'])
+@login_required
+def user():
+    return render_template('user.html')
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out")
+    return redirect(url_for('login'))
+
+@app.route('/search')
+@login_required
+def search():
+    return render_template('search.html')
+
+
+socketio = SocketIO(app)
+SocketIO(app,cors_allowed_origins="*")
+
+#text chat ini
+@app.route('/chatenter')
+def chatenter():
+    return render_template("chatenter.html")
+
+@app.route('/chat', methods=['GET', 'POST'])
+def chat():
+    username = request.args.get('username')
+    room = request.args.get('room')
+
+    if username and room:
+        return render_template('chat.html', username=username, room=room)
+    else:
+        return redirect(url_for('chatenter'))
+
+@socketio.on('send_message')
+def handle_send_message_event(data, methods=['GET', 'POST']):
+    app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
+                                                                    data['room'],
+                                                                    data['message']))
+    socketio.emit('receive_message', data, room=data['room'])
+
+@socketio.on('join_room')
+def handle_join_room_event(data):
+    app.logger.info("{} has joined the room {}".format(data['username'], data['room']))
+    join_room(data['room'])
+    socketio.emit('join_room_announcement', data, room=data['room'])
+
+
+@socketio.on('leave_room')
+def handle_leave_room_event(data):
+    app.logger.info("{} has left the room {}".format(data['username'], data['room']))
+    leave_room(data['room'])
+    socketio.emit('leave_room_announcement', data, room=data['room'])
+
+socketio.run(app, debug=True)
